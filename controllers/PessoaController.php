@@ -1,56 +1,160 @@
 <?php
-    // require_once './Pessoa_Fisica';
-    // require_once './Pessoa_Juridica';
 
-    // $pessoa_fisica = new Pessoa_Fisica();
-    // $pessoa_fisica->id = 1;
-    // $pessoa_fisica->CPF = "01299237029";
-    // $pessoa_fisica->RG = "5099009531";
-    // $pessoa_fisica->PIS = "020397804231";
-    // $pessoa_fisica->gender = "MALE";
-    // $pessoa_fisica->marital_status = "SINGLE";
-    // $pessoa_fisica->born = "30/03/1990";
-    // $pessoa_fisica->profession = "PROGRAMADOR";
-    // $pessoa_fisica->schooling = "PÓS GRADUAÇÃO";
+require "../models/Pessoa.php";
 
-    // $pessoa_juridica = new Pessoa_Juridica();
-    // $pessoa_juridica->id = 2;
-    // $pessoa_juridica->CNPJ = "08199996006230";
-    // $pessoa_juridica->fundation = "01/10/2022";
-    // $pessoa_juridica->CNAE = "159753";
+class PessoaController
+{
+    private $rota = null;
+    public $request = null;
+    protected $pessoaModel = null;
 
-    // $pessoa = new Pessoa();
-    // $pessoa->create($pessoa_fisica);
-    // $pessoa->create($pessoa_juridica);
+    public function __construct()
+    {
+        $this->pessoaModel = new Pessoa();
+        $this->request = $_REQUEST;
+        $this->rota = $this->request['rota'] ?? ""; // se não tiver a palavra rota nos parâmetros da URL informamos vazio.
+    }
 
-    // echo "oooopppaaa";
+    // retorna a rota para sabermos qual função utilizar (dadosPessoas | obterDadosPessoa | excluirPessoa...).
+    public function getRota()
+    {
+        return $this->rota;
+    }
 
-    $idPessoa = $_REQUEST["id"] ?? 0;
+    // desconectamos do banco de dados pelo model.
+    public function desconectarModel()
+    {
+        $this->pessoaModel->desconectar();
+    }
 
-    $dadosPessoa = 
-        [
-            [
-                "id" => 10,
-                "name" => "Aviaozinho",
-                "status" => "Ativo",
-                "email" => "aviaozinho@curso.com",
-                "phone" => "54 912345678",
-                "gender" => "M",
-                "type" => "CPF",
-                "cep" => "95707110",
-            ],
-            [
-                "id" => 50,
-                "name" => "Aviaozinhoxxxx",
-                "status" => "Ativo",
-                "email" => "aviaozinhoxxx@curso.com",
-                "phone" => "54 912345678",
-                "gender" => "M",
-                "type" => "CPF",
-                "cep" => "95707110",
-            ]
-    ];
+    // setamos o retorno para o front no formato JSON (javascript - objeto)
+    public function setResponseAPI($dados)
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($dados);
+        exit();
+    }
 
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($dadosPessoa);
-    exit();
+    // obtém todos os Pessoas
+    public function listarPessoas()
+    {
+        $dados = [];
+
+        $result = $this->pessoaModel->read_all();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $dados[] = $row;
+            }
+        }
+
+        $this->setResponseAPI($dados);
+    }
+
+    // obtém dados de 1 Pessoa (EDITAR).
+    public function obterDadosPessoa()
+    {
+        $idPessoa = $this->request["id"] ?? 0;
+
+        $dados = [];
+
+        if (!empty($idPessoa) && is_numeric($idPessoa)) {
+            $result = $this->pessoaModel->read($idPessoa);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $dados[] = $row;
+                }
+            }
+        }
+
+        $this->setResponseAPI($dados);
+    }
+
+    // apenas mudamos o status o Pessoa para inativo para dizermos que ele está excluído.
+    public function excluirPessoa()
+    {
+        $idPessoa = $this->request["id"] ?? 0;
+
+        $dados = [
+            "error" => 500,
+            "mensagem" => "Não foi possível excluir o Pessoa. Contate o administrados!"
+        ];
+
+        if (!empty($idPessoa) && is_numeric($idPessoa)) {
+            $result = $this->pessoaModel->delete($idPessoa);
+
+            if ($result) {
+                $dados = [
+                    "success" => 201,
+                    "mensagem" => "Pessoa excluída."
+                ];
+            }
+        }
+
+        $this->setResponseAPI($dados);
+    }
+
+    public function salvarAtualizarPessoa()
+    {
+        $dados = [
+            "error" => 500,
+            "mensagem" => "Não foi possível salvar o Pessoa. Contate o administrados!"
+        ];
+
+        $idPessoa = $this->request["id"] ?? 0;
+        $nome = $this->request["nome"] ?? "";
+        $Pessoa = $this->request["Pessoa"] ?? "";
+        $email = $this->request["email"] ?? "";
+        $senha = $this->request["senha"] ?? "";
+        $status = $this->request["status"] ?? 0;
+        $email_recuperacao = $this->request["email_recuperacao"] ?? "";
+
+        // ATUALIZAR
+        if (!empty($idPessoa) && is_numeric($idPessoa)) {
+            $mensagem = "Pessoa atualizado com sucesso.";
+
+            $result = $this->pessoaModel->atualizar($nome, $Pessoa, $email, $senha, $status, $email_recuperacao, $idPessoa);
+        } else {
+            $mensagem = "Pessoa cadastrado com sucesso.";
+
+            $result = $this->pessoaModel->cadastrar($nome, $Pessoa, $email, $senha, $status, $email_recuperacao);
+            $idPessoa = $result;
+        }
+
+        if ($result) {
+            $dados = [
+                "success" => 201,
+                "mensagem" => $mensagem,
+                "idPessoa" => $idPessoa,
+            ];
+        }
+
+        $this->setResponseAPI($dados);
+    }
+}
+
+// inicializamos (instanciamos) nossa variável (objeto).
+$objPessoaController = new PessoaController();
+
+// aqui obtemos nossa rota informada la no frontend (javascript) e conforme a rota informada redirecionamos a ação.
+switch ($objPessoaController->getRota()) {
+    case "listarTodasPessoas":
+            $objPessoaController->listarPessoas();
+        break;
+    case "editarPessoa":
+            $objPessoaController->obterDadosPessoa();
+        break;
+    case "excluirPessoa":
+            $objPessoaController->excluirPessoa();
+        break;
+    case "salvarAtualizarPessoa":
+            $objPessoaController->salvarAtualizarPessoa();
+        break;
+    default:
+            $objPessoaController->setResponseAPI(["erro" => "404", "mensagem" => "Rota inválida ou não encontrada."]);
+        break;
+}
+
+// após termino execução encerramos a conexão do model com o banco
+// $objPessoaController->desconectarModel();

@@ -4,7 +4,7 @@ interface IPessoa {
 
     public function create($pessoa);
 
-    public function updadte($pessoa);
+    public function update($pessoa);
 
     public function read($id);
 
