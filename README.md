@@ -41,7 +41,7 @@ Selecionar a opção (número) conforme desejado:
 ## Instalar PHP7.4 
 
 ```PHP
-sudo apt-get install -y php7.4-cli php7.4-dev php7.4-pgsql php7.4-sqlite3 php7.4-gd php7.4-curl php7.4-imap php7.4-mysql php7.4-mbstring php7.4-xml php7.4-zip php7.4-bcmath php7.4-soap php7.4-intl php7.4-readline php7.4-common php7.4-pspell php7.4-tidy php7.4-xmlrpc php7.4-xsl php7.4-opcache php-curl php7.4-gd php7.4-mbstring php7.4-xml php7.4-xmlrpc php7.4-soap php7.4-intl php7.4-zip php7.4-fpm php7.4-json php-pear php-memcached php-imagick php-apcu php-xdebug php libapache2-mod-php
+sudo apt-get install -y php8.1-cli php8.1-dev php8.1-pgsql php8.1-sqlite3 php8.1-gd php8.1-curl php8.1-imap php8.1-mysql php8.1-mbstring php8.1-xml php8.1-zip php8.1-bcmath php8.1-soap php8.1-intl php8.1-readline php8.1-common php8.1-pspell php8.1-tidy php8.1-xmlrpc php8.1-xsl php8.1-opcache php-curl php8.1-gd php8.1-mbstring php8.1-xml php8.1-xmlrpc php8.1-soap php8.1-intl php8.1-zip php8.1-fpm php8.1-json php-pear php-memcached php-imagick php-apcu php-xdebug php libapache2-mod-php
 ```
 
 
