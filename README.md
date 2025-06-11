@@ -140,6 +140,7 @@ Config Json vscode
 
 ```JAVASCRIPT
 // Place your key bindings in this file to override the defaultsauto[]
+// Place your key bindings in this file to override the defaultsauto[]
 [
 	{
 		"key": "ctrl+alt+j",
@@ -222,9 +223,50 @@ Config Json vscode
 	{
 		"key": "ctrl+shift+numpad_add",
 		"command": "search.action.expandSearchResults"
+	},
+	{
+		"key": "ctrl+k",
+		"command": "workbench.action.terminal.kill"
+	},
+	{
+		"key": "ctrl+shift+oem_3",
+		"command": "workbench.action.togglePanel"
+	},
+	{
+		"key": "ctrl+j",
+		"command": "-workbench.action.togglePanel"
+	},
+	{
+		"key": "ctrl+j",
+		"command": "workbench.action.terminal.new",
+		"when": "terminalProcessSupported"
+	},
+	{
+		"key": "ctrl+shift+oem_3",
+		"command": "-workbench.action.terminal.new",
+		"when": "terminalProcessSupported"
+	},
+	{
+		"key": "shift+f11",
+		"command": "extension.node-debug.startWithStopOnEntry",
+		"when": "!inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'node' || !inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'pwa-extensionHost' || !inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'pwa-node'"
+	},
+	{
+		"key": "f11",
+		"command": "-extension.node-debug.startWithStopOnEntry",
+		"when": "!inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'node' || !inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'pwa-extensionHost' || !inDebugMode && activeViewlet == 'workbench.view.debug' && debugConfigurationType == 'pwa-node'"
+	},
+	{
+		"key": "shift+f11",
+		"command": "php.debug.startWithStopOnEntry",
+		"when": "!inDebugMode && debugConfigurationType == 'php'"
+	},
+	{
+		"key": "f11",
+		"command": "-php.debug.startWithStopOnEntry",
+		"when": "!inDebugMode && debugConfigurationType == 'php'"
 	}
-]
-```
+]```
 
 
 
