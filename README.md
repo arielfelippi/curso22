@@ -107,6 +107,16 @@ xdebug.remote_mode = req
 xdebug.remote_port = 9003
 ```
 
+```php.ini
+zend_extension=xdebug
+[xdebug]
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/var/log/xdebug.log
+```
+
 Config Json vscode
 ```JAVASCRIPT
 {
